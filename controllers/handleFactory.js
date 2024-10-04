@@ -18,12 +18,13 @@ export const checkFields = (Model, req, next) => {
 
 	// Step 3: If extra fields are found, send an error response
 	if (extraFields.length > 0) {
-		return next(
+		next(
 			new AppError(
 				`These fields are not allowed: ${extraFields.join(", ")}`,
 				400
 			)
 		);
+		return { allowedFields: [], filteredData: {} };
 	}
 
 	// Step 4: Proceed with filtering the valid fields
@@ -58,7 +59,11 @@ export const deleteOne = (Model) =>
 // UPDATE One Document
 export const updateOne = (Model) =>
 	catchAsync(async (req, res, next) => {
-		let { allowedFields, filteredData } = checkFields(Model, req, next);
+		let { allowedFields = [], filteredData = {} } = checkFields(
+			Model,
+			req,
+			next
+		);
 
 		// if document contain slug then create a slug
 		if (allowedFields.includes("slug")) {
@@ -90,7 +95,11 @@ export const updateOne = (Model) =>
 // CREATE One Document
 export const createOne = (Model) =>
 	catchAsync(async (req, res, next) => {
-		let { allowedFields, filteredData } = checkFields(Model, req, next);
+		let { allowedFields = [], filteredData = {} } = checkFields(
+			Model,
+			req,
+			next
+		);
 
 		// if document contain slug then create a slug
 		if (allowedFields.includes("slug")) {
@@ -131,7 +140,6 @@ export const getOne = (Model, popOptions) =>
 
 		res.status(200).json({
 			status: "success",
-			cached: false,
 			doc,
 		});
 	});
@@ -164,7 +172,6 @@ export const getAll = (Model, popOptions) =>
 
 		res.status(200).json({
 			status: "success",
-			cached: false,
 			results: doc.length,
 			doc,
 		});
@@ -186,7 +193,6 @@ export const getOneBySlug = (Model, popOptions) =>
 
 		res.status(200).json({
 			status: "success",
-			cached: false,
 			doc,
 		});
 	});
