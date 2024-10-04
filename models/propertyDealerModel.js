@@ -32,14 +32,6 @@ const propertyDealerSchema = new mongoose.Schema(
   }
 );
 
-// Pre-save middleware to auto-generate slug
-propertyDealerSchema.pre("save", function (next) {
-  if (!this.slug) {
-    this.slug = slugify(this.agency, { lower: true, strict: true });
-  }
-  next();
-});
-
 const PropertyDealer = mongoose.model("PropertyDealer", propertyDealerSchema);
 
 export default PropertyDealer;

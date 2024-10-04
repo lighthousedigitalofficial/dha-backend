@@ -36,13 +36,6 @@ const facilitiesSchema = new mongoose.Schema(
   }
 );
 
-// Pre-save middleware to auto-generate slug
-facilitiesSchema.pre('save', function(next) {
-  if (!this.slug) {
-    this.slug = slugify(this.title, { lower: true, strict: true });
-  }
-  next();
-});
 
 const Facilities = mongoose.model("Facilities", facilitiesSchema);
 
