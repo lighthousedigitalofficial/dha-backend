@@ -1,13 +1,8 @@
 import mongoose from "mongoose";
-import { v4 as uuidv4 } from "uuid";
 
 const associatesWebsiteSchema = new mongoose.Schema(
 	{
-		id: {
-			type: String,
-			default: uuidv4, 
-			unique: true,
-		},
+
 		logo: {
 			type: String,
 			required: [true, "Please provide the logo URL."],
@@ -18,12 +13,12 @@ const associatesWebsiteSchema = new mongoose.Schema(
 		},
 		status: {
 			type: String,
-			enum: ["active", "inactive"], 
+			enum: ["active", "inactive"],
 			default: "active",
 		},
 	},
 	{
-		timestamps: true, 
+		timestamps: true,
 	}
 );
 
