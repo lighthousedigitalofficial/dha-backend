@@ -25,13 +25,7 @@ const eventsSchema = new mongoose.Schema(
   }
 );
 
-// Pre-save middleware to auto-generate slug
-eventsSchema.pre('save', function(next) {
-  if (!this.slug) {
-    this.slug = slugify(this.title, { lower: true, strict: true });
-  }
-  next();
-});
+
 
 const Events = mongoose.model("Events", eventsSchema);
 

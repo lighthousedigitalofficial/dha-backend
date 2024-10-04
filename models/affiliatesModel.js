@@ -21,14 +21,6 @@ const affiliatesSchema = new mongoose.Schema(
   }
 );
 
-// Pre-save middleware to auto-generate slug
-affiliatesSchema.pre('save', function(next) {
-  if (!this.slug) {
-    this.slug = slugify(this.name, { lower: true, strict: true });
-  }
-  next();
-});
-
 const Affiliates = mongoose.model("Affiliates", affiliatesSchema);
 
 export default Affiliates;

@@ -40,13 +40,6 @@ const engineersSchema = new mongoose.Schema(
   }
 );
 
-// Pre-save middleware to auto-generate slug
-engineersSchema.pre('save', function(next) {
-  if (!this.slug) {
-    this.slug = slugify(this.engineerName, { lower: true, strict: true });
-  }
-  next();
-});
 
 const Engineers = mongoose.model("Engineers", engineersSchema);
 
