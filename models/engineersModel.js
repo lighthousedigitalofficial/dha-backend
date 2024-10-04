@@ -1,13 +1,8 @@
 import mongoose from "mongoose";
-import { v4 as uuidv4 } from 'uuid';
+import slugify from "slugify";
 
 const engineersSchema = new mongoose.Schema(
   {
-    id: {
-        type: String,
-        default: uuidv4, 
-        unique: true,
-      },
     registerNumber: {
       type: Number,
       required: [true, "Please provide a register number."],
@@ -44,6 +39,14 @@ const engineersSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Pre-save middleware to auto-generate slug
+engineersSchema.pre('save', function(next) {
+  if (!this.slug) {
+    this.slug = slugify(this.engineerName, { lower: true, strict: true });
+  }
+  next();
+});
 
 const Engineers = mongoose.model("Engineers", engineersSchema);
 

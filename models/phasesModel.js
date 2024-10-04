@@ -1,13 +1,8 @@
 import mongoose from "mongoose";
-import { v4 as uuidv4 } from 'uuid';
+import slugify from "slugify";
 
 const phasesSchema = new mongoose.Schema(
   {
-    id: {
-        type: String,
-        default: uuidv4, 
-        unique: true,
-      },
     title: {
       type: String,
       required: [true, "Please provide a title."],
@@ -43,6 +38,14 @@ const phasesSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Pre-save middleware to auto-generate slug
+phasesSchema.pre('save', function(next) {
+  if (!this.slug) {
+    this.slug = slugify(this.title, { lower: true, strict: true });
+  }
+  next();
+});
 
 const Phases = mongoose.model("Phases", phasesSchema);
 

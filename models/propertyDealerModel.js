@@ -1,13 +1,8 @@
 import mongoose from "mongoose";
-import { v4 as uuidv4 } from 'uuid';
+import slugify from "slugify";
 
 const propertyDealerSchema = new mongoose.Schema(
   {
-    id: {
-        type: String,
-        default: uuidv4, 
-        unique: true,
-      },
     agency: {
       type: String,
       required: [true, "Please provide an agency name."],
@@ -36,6 +31,14 @@ const propertyDealerSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Pre-save middleware to auto-generate slug
+propertyDealerSchema.pre("save", function (next) {
+  if (!this.slug) {
+    this.slug = slugify(this.agency, { lower: true, strict: true });
+  }
+  next();
+});
 
 const PropertyDealer = mongoose.model("PropertyDealer", propertyDealerSchema);
 

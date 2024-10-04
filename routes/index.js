@@ -12,7 +12,7 @@ import affiliatesRoutes from "./affiliatesRoutes.js";
 router.use("/users", userRoutes);
 router.use("/phases", phasesRoutes);
 router.use("/facilities", facilitiesRoutes);
-router.use("/enents", eventsRoutes);
+router.use("/events", eventsRoutes);
 router.use("/engineers", engineersRoutes);
 router.use("/affiliates", affiliatesRoutes);
 

@@ -1,14 +1,8 @@
 import mongoose from "mongoose";
-import { v4 as uuidv4 } from 'uuid';
-
+import slugify from "slugify";
 
 const affiliatesSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      default: uuidv4, 
-      unique: true,
-    },
     name: {
       type: String,
       required: [true, "Please provide a name."],
@@ -21,16 +15,19 @@ const affiliatesSchema = new mongoose.Schema(
       enum: ["active", "inactive"],
       default: "active",
     },
-    // bannerId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Banner",
-    //   required: [true, "Please provide a banner ID."],
-    // },
   },
   {
     timestamps: true,
   }
 );
+
+// Pre-save middleware to auto-generate slug
+affiliatesSchema.pre('save', function(next) {
+  if (!this.slug) {
+    this.slug = slugify(this.name, { lower: true, strict: true });
+  }
+  next();
+});
 
 const Affiliates = mongoose.model("Affiliates", affiliatesSchema);
 
