@@ -22,12 +22,11 @@ router.use("/events", eventsRoutes);
 router.use("/engineers", engineersRoutes);
 router.use("/affiliates", affiliatesRoutes);
 
-
-router.use("/users", userRoutes);
 router.use("/activities", activityRoutes);
 router.use("/sale-properties", salePropertyRoutes);
 router.use("/purchase-properties", purchasePropertyRoutes);
 router.use("/registration-properties", registrationPropertyRoutes);
 router.use("/teams", teamRoutes);
 router.use("/portal-guides", portalGuideRoutes);
+
 export default router;
