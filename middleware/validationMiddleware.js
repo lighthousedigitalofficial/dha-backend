@@ -1,14 +1,9 @@
-import Joi from 'joi';
+import AppError from "./../utils/appError.js";
 
-export const validate = (schema) => {
-    return (req, res, next) => {
-        const { error } = schema.validate(req.body);
-        if (error) {
-            return res.status(400).json({
-                status: 'error',
-                message: error.details[0].message,
-            });
-        }
-        next();
-    };
+export const validateSchema = (Schema) => (req, res, next) => {
+  const { error } = Schema.validate(req.body);
+  if (error) {
+    return next(new AppError(error.details[0].message, 400));
+  }
+  next();
 };
