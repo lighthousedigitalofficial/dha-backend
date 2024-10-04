@@ -20,4 +20,13 @@ export const noticeValidationSchema = Joi.object({
             'string.empty': 'Image URL cannot be empty',
             'any.required': 'Image URL is a required field'
         }),
+    description: Joi.string()
+        .min(5)
+        .max(500)
+        .optional()  
+        .messages({
+            'string.base': 'Description should be a string',
+            'string.min': 'Description should be at least 5 characters long',
+            'string.max': 'Description should not exceed 500 characters',
+        }),
 });
