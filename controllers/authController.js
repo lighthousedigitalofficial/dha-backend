@@ -1,65 +1,89 @@
 import User from "../models/userModel.js";
+import config from "../config/index.js";
 
 import { checkFields } from "./handleFactory.js";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "./../utils/appError.js";
 
-import { loginService } from "../services/authService.js";
-
-const createSendToken = catchAsync(async (user, statusCode, res) => {
-	const { accessToken } = await loginService(user);
-
-	// set cookie options
-	const cookieOptions = {
-		expires: new Date(
-			Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-		),
-		httpOnly: true,
-	};
-
-	// In production mode: we set to secure = true
-	if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
-
-	// do not show the password to client side
-	user.password = undefined;
-
-	res.cookie("jwt", accessToken, cookieOptions);
-
-	res.status(statusCode).json({
-		status: "success",
-		accessToken,
-		user,
-	});
-});
+import { loginService, createRefreshToken } from "../services/authService.js";
 
 export const login = catchAsync(async (req, res, next) => {
 	const { email, password } = req.body;
 
-	// 1) Check if email and password exists
+	// 1) Check if email and password are provided
 	if (!email || !password) {
 		return next(new AppError("Please provide email and password", 400));
 	}
 
-	// 2) Check the user exists && password is correct
+	// 2) Verify user exists and check if the password is correct
 	const user = await User.findOne({ email }).select("+password");
 
 	if (!user || !(await user.correctPassword(password, user.password))) {
 		return next(new AppError("Incorrect email or password", 401));
 	}
 
-	// 3) If everything is Ok, then send the response to client
+	// 3) Generate and send tokens if everything is OK
 	createSendToken(user, 200, res);
 });
 
+// CreateSendToken function (for both access and refresh tokens)
+const createSendToken = async (user, statusCode, res) => {
+	const accessToken = await loginService(user); // Create access token
+	const refreshToken = createRefreshToken(user); // Generate refresh token
+
+	// Validate and format cookie expiration date
+	let refreshTokenExpiresInDays = config.refreshTokenExpiresIn;
+	if (isNaN(refreshTokenExpiresInDays) || refreshTokenExpiresInDays <= 0) {
+		// Default to 30 days if not properly configured // Default to 30 days if not properly configured
+		refreshTokenExpiresInDays = 30;
+	}
+
+	// Set cookie options for refresh token (secure & httpOnly)
+	const cookieOptions = {
+		expires: new Date(
+			Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000
+		), // Convert days to milliseconds
+		httpOnly: true, // Prevent JS access to cookie
+		secure: config.nodeENV === "production", // HTTPS only in production
+		sameSite: "strict", // CSRF protection
+	};
+
+	// Clear password from user object
+	user.password = undefined;
+
+	// Store refresh token in an HTTP-only cookie
+	res.cookie("jwtRefreshToken", refreshToken, cookieOptions);
+
+	// Send response with access token
+	res.status(statusCode).json({
+		status: "success",
+		token: accessToken,
+		doc: user,
+	});
+};
+
 export const signup = catchAsync(async (req, res, next) => {
+	// Use checkFields to filter out any invalid fields
 	const { filteredData } = checkFields(User, req, next);
 
-	const { name, email, password } = filteredData;
-
-	const newUser = await User.create({
-		name,
+	const {
+		firstName,
+		lastName,
 		email,
 		password,
+		identityType,
+		identityNum,
+		phone,
+	} = filteredData;
+
+	const newUser = await User.create({
+		firstName,
+		lastName,
+		email,
+		password,
+		identityType,
+		identityNum,
+		phone,
 	});
 
 	createSendToken(newUser, 201, res);

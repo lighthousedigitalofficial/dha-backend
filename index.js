@@ -12,7 +12,7 @@ import AppError from "./utils/appError.js";
 
 import router from "./routes/index.js";
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 
 connectDB();
 
@@ -44,5 +44,5 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 app.listen(port, () =>
-	console.log(`Server running on http://localhost:${port}`)
+	console.log(`🛜  Server running on http://localhost:${port}`)
 );

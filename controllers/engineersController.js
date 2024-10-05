@@ -1,10 +1,13 @@
+
 import Engineers from "../models/engineersModel.js";
 import * as factory from "./handleFactory.js";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import Affiliates from "../models/affiliatesModel.js";
+
 import slugify from 'slugify'; // Import slugify
 
+// CRUD Operations
 export const getAllEngineers = factory.getAll(Engineers);
 export const getEngineers = factory.getOne(Engineers);
 
