@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { checkReferenceId } from "../utils/helpers.js";
 
-// Define the media schema
+
 const mediaSchema = new mongoose.Schema(
   {
     title: {
@@ -37,7 +38,7 @@ mediaSchema.pre('find', function (next) {
 
 // Pre 'save' middleware to check if bannerId exists before saving
 mediaSchema.pre('save', async function (next) {
-  await checkReferenceId('Banner', this.bannerId, next);
+  await checkReferenceId('Banner', this.bannerId, next); // Use your checkReferenceId function
   next();
 });
 

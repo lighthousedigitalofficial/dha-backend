@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import { checkReferenceId } from "../utils/helpers.js";
 const videoSchema = new mongoose.Schema(
   {
     url: {
@@ -31,7 +31,7 @@ videoSchema.pre('find', function (next) {
 });
 
 videoSchema.pre('save', async function (next) {
-  await checkReferenceId('Media', this.mediaId, next);
+  await checkReferenceId('Media', this.mediaId, next); 
   next();
 });
 
