@@ -3,6 +3,7 @@ import {
   createPhases,
   deletePhases,
   getAllPhases,
+  getBySlug,
   getPhases,
   updatePhases,
 } from "../controllers/phasesController.js";
