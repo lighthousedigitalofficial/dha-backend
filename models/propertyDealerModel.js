@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { checkReferenceId } from "../utils/helpers.js";
 
 const propertyDealerSchema = new mongoose.Schema(
   {
@@ -30,6 +31,21 @@ const propertyDealerSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Pre 'find' middleware to auto-populate the affiliateId field
+propertyDealerSchema.pre("find", function (next) {
+  this.populate({
+    path: "affiliateId", // Corrected from 'affiliatesId' to 'affiliateId'
+    select: "name",
+  });
+  next();
+});
+
+// Pre 'save' middleware to check if affiliateId exists before saving
+propertyDealerSchema.pre("save", async function (next) {
+  await checkReferenceId("Affiliates", this.affiliateId, next);
+  next();
+});
 
 const PropertyDealer = mongoose.model("PropertyDealer", propertyDealerSchema);
 

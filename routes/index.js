@@ -18,18 +18,20 @@ import purchasePropertyRoutes from "./purchasePropertyRoutes.js";
 import registrationPropertyRoutes from "./registrationPropertyRoutes.js";
 import teamRoutes from "./teamRoutes.js";
 import portalGuideRoutes from "./portalGuideRoutes.js";
-import mediaRoutes from "./mediaRoutes.js"
+import mediaRoutes from "./mediaRoutes.js";
+import propertyDealerRoutes from "./propertyDealerRoutes.js";
 
 router.use("/users", userRoutes);
 
-// Kiran 
+// Kiran
 router.use("/phases", phasesRoutes);
 router.use("/facilities", facilitiesRoutes);
 router.use("/events", eventsRoutes);
 router.use("/engineers", engineersRoutes);
 router.use("/affiliates", affiliatesRoutes);
+router.use("/property-dealer", propertyDealerRoutes);
 
-// Waseem 
+// Waseem
 router.use("/activities", activityRoutes);
 router.use("/sale-properties", salePropertyRoutes);
 router.use("/purchase-properties", purchasePropertyRoutes);
@@ -37,12 +39,11 @@ router.use("/registration-properties", registrationPropertyRoutes);
 router.use("/teams", teamRoutes);
 router.use("/portal-guides", portalGuideRoutes);
 
-// Ahsan 
-router.use("/associate-websites", associateWebsitesRoutes); 
-router.use("/banners", bannerRoutes); 
-router.use("/notices", noticeRoutes); 
-router.use("/videos", videoRoutes); 
-router.use("/media", mediaRoutes); 
-
+// Ahsan
+router.use("/associate-websites", associateWebsitesRoutes);
+router.use("/banners", bannerRoutes);
+router.use("/notices", noticeRoutes);
+router.use("/videos", videoRoutes);
+router.use("/media", mediaRoutes);
 
 export default router;
