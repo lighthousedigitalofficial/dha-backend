@@ -1,29 +1,29 @@
 import Media from "../models/mediaModel.js";
+import slugify from "slugify";
 import {
-  createOne,
   deleteOne,
   getAll,
   getOne,
   updateOne,
+  getOneBySlug,
 } from "./handleFactory.js";
 
 export const createMedia = async (req, res) => {
     try {
-      // Destructure the request body
       const { title, bannerId, slug, description } = req.body;
   
-      // Create a new media instance
+      // Generate slug from title if not provided
+      const mediaSlug = slug || slugify(title, { lower: true });
+  
       const media = new Media({
         title,
         bannerId,
-        slug,
+        slug: mediaSlug, // Use generated slug
         description,
       });
   
-      // Save the media instance to the database
       const savedMedia = await media.save();
   
-      // Respond with the created media item
       res.status(201).json({
         status: "success",
         data: {
@@ -31,7 +31,7 @@ export const createMedia = async (req, res) => {
         },
       });
     } catch (error) {
-      console.error(error); // Log the error for debugging
+      console.error(error);
       res.status(500).json({
         status: "error",
         message: "An error occurred while creating media.",
@@ -39,11 +39,45 @@ export const createMedia = async (req, res) => {
       });
     }
   };
-  
+
 export const getMedias = getAll(Media);
-
 export const getMedia = getOne(Media);
-
+export const getMediaBySlug = getOneBySlug(Media);
 export const updateMedia = updateOne(Media);
-
 export const deleteMedia = deleteOne(Media);
+
+// New function to update the media status
+export const updateMediaStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body; // Assuming you send the new status in the request body
+
+    // Find the media by ID and update its status
+    const updatedMedia = await Media.findByIdAndUpdate(
+      id,
+      { status }, // Update the status field
+      { new: true, runValidators: true } // Return the updated document and run validators
+    );
+
+    if (!updatedMedia) {
+      return res.status(404).json({
+        status: "error",
+        message: "Media not found.",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        media: updatedMedia,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: "error",
+      message: "An error occurred while updating the media status.",
+      error: error.message,
+    });
+  }
+};
