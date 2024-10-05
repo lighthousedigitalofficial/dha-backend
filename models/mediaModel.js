@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// Define the media schema
 const mediaSchema = new mongoose.Schema(
   {
     title: {
@@ -13,7 +14,7 @@ const mediaSchema = new mongoose.Schema(
     },
     slug: {
       type: String,
-      unique: true, 
+      unique: true,
     },
     description: {
       type: String,
@@ -25,6 +26,22 @@ const mediaSchema = new mongoose.Schema(
   }
 );
 
+// Pre 'find' middleware to auto-populate the bannerId field
+mediaSchema.pre('find', function (next) {
+  this.populate({
+    path: 'bannerId',
+    select: 'title',
+  });
+  next();
+});
+
+// Pre 'save' middleware to check if bannerId exists before saving
+mediaSchema.pre('save', async function (next) {
+  await checkReferenceId('Banner', this.bannerId, next);
+  next();
+});
+
+// Create the model
 const Media = mongoose.model('Media', mediaSchema);
 
 export default Media;
