@@ -20,7 +20,7 @@ router.post("/logout", protect, logout);
 router
 	.route("/")
 	.post(protect, restrictTo("admin"), createUser)
-	.get(protect, restrictTo("admin"), getUsers);
+	.get(protect, getUsers);
 
 router
 	.route("/:id")

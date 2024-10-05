@@ -7,7 +7,6 @@ import AppError from "./../utils/appError.js";
 
 import { loginService, createRefreshToken } from "../services/authService.js";
 
-// Login function
 export const login = catchAsync(async (req, res, next) => {
 	const { email, password } = req.body;
 
@@ -32,11 +31,18 @@ const createSendToken = async (user, statusCode, res) => {
 	const accessToken = await loginService(user); // Create access token
 	const refreshToken = createRefreshToken(user); // Generate refresh token
 
+	// Validate and format cookie expiration date
+	let refreshTokenExpiresInDays = config.refreshTokenExpiresIn;
+	if (isNaN(refreshTokenExpiresInDays) || refreshTokenExpiresInDays <= 0) {
+		// Default to 30 days if not properly configured // Default to 30 days if not properly configured
+		refreshTokenExpiresInDays = 30;
+	}
+
 	// Set cookie options for refresh token (secure & httpOnly)
 	const cookieOptions = {
 		expires: new Date(
-			Date.now() + config.refreshTokenExpiresIn * 24 * 60 * 60 * 1000
-		),
+			Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000
+		), // Convert days to milliseconds
 		httpOnly: true, // Prevent JS access to cookie
 		secure: config.nodeENV === "production", // HTTPS only in production
 		sameSite: "strict", // CSRF protection
