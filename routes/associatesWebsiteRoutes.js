@@ -6,8 +6,9 @@ import {
 	deleteAssociatesWebsite,
 	updateAssociatesWebsite,
 } from "../controllers/associatesWebsiteController.js";
-import { associateWebsiteValidationSchema } from "../validations/associateWebsiteValidation.js";
+import { associateWebsiteValidationSchema } from "../validations/associateWebsiteValidator.js";
 import { validateSchema } from "../middleware/validationMiddleware.js";
+import checkObjectId from "../middleware/checkObjectId.js";
 
 const router = express.Router();
 
@@ -21,11 +22,11 @@ router
 
 router
 	.route("/:id")
-	.get(getAssociatesWebsite)
+	.get(checkObjectId, getAssociatesWebsite) 
 	.put(
-		validateSchema(associateWebsiteValidationSchema),
+		checkObjectId,
 		updateAssociatesWebsite
 	)
-	.delete(deleteAssociatesWebsite);
+	.delete(checkObjectId, deleteAssociatesWebsite); 
 
 export default router;
