@@ -6,3 +6,5 @@ export const getEvents = factory.getOne(Events);
 export const createEvents = factory.createOne(Events);
 export const updateEvents = factory.updateOne(Events);
 export const deleteEvents = factory.deleteOne(Events);
+
+export const getBySlug = factory.getOneBySlug(Events);

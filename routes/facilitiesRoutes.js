@@ -5,6 +5,7 @@ import {
   createFacilities,
   deleteFacilities,
   getAllFacilities,
+  getBySlug,
   getFacilities,
   updateFacilities,
 } from "../controllers/facilitiesController.js";
@@ -12,6 +13,8 @@ import {
 const router = express.Router();
 
 router.route("/").post(createFacilities).get(getAllFacilities);
+router.route("/slug/:slug").get(getBySlug);
+
 
 router
   .route("/:id", checkObjectId)
