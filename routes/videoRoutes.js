@@ -1,6 +1,7 @@
 import express from "express";
-import { validate } from "../middleware/validationMiddleware.js";
-import { videoValidationSchema } from "../validations/videoValidation.js";
+import { validateSchema } from "../middleware/validationMiddleware.js";
+import { videoValidationSchema } from '../validations/videoValidator.js';
+import checkObjectId from "../middleware/checkObjectId.js";
 import {
 	createVideo,
 	getVideos,
@@ -13,13 +14,16 @@ const router = express.Router();
 
 router
 	.route("/")
-	.get(getVideos)
-	.post(validate(videoValidationSchema), createVideo);
+	.get(getVideos) 
+	.post(validateSchema(videoValidationSchema), createVideo); 
 
 router
 	.route("/:id")
-	.get(getVideo)
-	.put(validate(videoValidationSchema), updateVideo)
-	.delete(deleteVideo);
+	.get(checkObjectId, getVideo)
+	.put(
+		checkObjectId, 
+		updateVideo
+	)
+	.delete(checkObjectId, deleteVideo);
 
 export default router;
