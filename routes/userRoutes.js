@@ -6,16 +6,26 @@ import {
 	getUsers,
 	updateUser,
 } from "./../controllers/userController.js";
-import checkObjectId from "../middleware/checkObjectId.js";
+import { login, signup, logout } from "../controllers/authController.js";
+import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").post(createUser).get(getUsers);
+router.post("/login", login);
+router.post("/register", signup);
+router.post("/logout", protect, logout);
+
+// router.put("/update-password", protect, selectModelByRole, updatePassword);
 
 router
-	.route("/:id", checkObjectId)
-	.get(getUser)
-	.put(updateUser)
-	.delete(deleteUser);
+	.route("/")
+	.post(protect, restrictTo("admin"), createUser)
+	.get(protect, restrictTo("admin"), getUsers);
+
+router
+	.route("/:id")
+	.get(protect, getUser)
+	.delete(protect, restrictTo("admin"), deleteUser)
+	.put(protect, updateUser);
 
 export default router;
