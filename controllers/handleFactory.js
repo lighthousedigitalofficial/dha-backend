@@ -67,10 +67,16 @@ export const updateOne = (Model) =>
 
 		// if document contain slug then create a slug
 		if (allowedFields.includes("slug")) {
-			filteredData = {
-				...filteredData,
-				slug: slugify(filteredData.name, { lower: true }),
-			};
+			if (filteredData.name) {
+				filteredData = {
+					...filteredData,
+					slug: slugify(filteredData.name, { lower: true }),
+				};
+			} else
+				filteredData = {
+					...filteredData,
+					slug: slugify(filteredData.title, { lower: true }),
+				};
 		}
 
 		// Perform the update operation
@@ -103,10 +109,16 @@ export const createOne = (Model) =>
 
 		// if document contain slug then create a slug
 		if (allowedFields.includes("slug")) {
-			filteredData = {
-				...filteredData,
-				slug: slugify(filteredData.name, { lower: true }),
-			};
+			if (filteredData.name) {
+				filteredData = {
+					...filteredData,
+					slug: slugify(filteredData.name, { lower: true }),
+				};
+			} else
+				filteredData = {
+					...filteredData,
+					slug: slugify(filteredData.title, { lower: true }),
+				};
 		}
 
 		const doc = await Model.create(filteredData);
