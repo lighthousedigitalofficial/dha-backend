@@ -12,7 +12,7 @@ import AppError from "./utils/appError.js";
 
 import router from "./routes/index.js";
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 connectDB();
 
