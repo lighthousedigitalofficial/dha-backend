@@ -2,7 +2,7 @@
 	"name": "nova-store",
 	"version": "1.0.0",
 	"type": "module",
-	"description": "email sandbox",
+	"description": "dha backend",
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
