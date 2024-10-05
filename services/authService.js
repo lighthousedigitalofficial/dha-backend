@@ -1,14 +1,24 @@
 import jwt from "jsonwebtoken";
 import config from "../config/index.js";
 
-function generateAccessToken(userId, role) {
-	return jwt.sign({ userId, role }, config.jwtSecret, {
+// Generate access token service
+export const loginService = async (user) => {
+	return jwt.sign({ id: user._id, role: user.role }, config.jwtSecret, {
 		expiresIn: config.jwtAccessTime,
 	});
-}
+};
 
-export async function loginService(user) {
-	const accessToken = generateAccessToken(user._id, user.role);
+// Generate refresh token service
+export const createRefreshToken = (user) => {
+	return jwt.sign({ id: user._id, role: user.role }, config.refreshSecret, {
+		expiresIn: config.refreshTokenExpiresIn,
+	});
+};
 
-	return { accessToken };
-}
+export const verifyRefreshToken = (token) => {
+	try {
+		return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+	} catch (err) {
+		return null;
+	}
+};
