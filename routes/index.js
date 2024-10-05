@@ -19,7 +19,7 @@ import registrationPropertyRoutes from "./registrationPropertyRoutes.js";
 import teamRoutes from "./teamRoutes.js";
 import portalGuideRoutes from "./portalGuideRoutes.js";
 import mediaRoutes from "./mediaRoutes.js"
-
+import propertyDealerRoutes from "./propertyDealerRoutes.js";
 router.use("/users", userRoutes);
 
 // Kiran 
@@ -28,6 +28,7 @@ router.use("/facilities", facilitiesRoutes);
 router.use("/events", eventsRoutes);
 router.use("/engineers", engineersRoutes);
 router.use("/affiliates", affiliatesRoutes);
+router.use("/property-dealer", propertyDealerRoutes);
 
 // Waseem 
 router.use("/activities", activityRoutes);
