@@ -1,6 +1,7 @@
 import express from "express";
-import { validate } from "../middleware/validationMiddleware.js";
-import { noticeValidationSchema } from "../validations/noticeValidation.js";
+import { validateSchema } from "../middleware/validationMiddleware.js"; 
+import { noticeValidationSchema } from "../validations/noticeValidator.js";
+import checkObjectId from "../middleware/checkObjectId.js"; 
 import {
 	createNotice,
 	getNotices,
@@ -13,13 +14,15 @@ const router = express.Router();
 
 router
 	.route("/")
-	.get(getNotices)
-	.post(validate(noticeValidationSchema), createNotice); // Apply validation middleware for POST
+	.get(getNotices) 
+	.post(validateSchema(noticeValidationSchema), createNotice); 
 
 router
 	.route("/:id")
-	.get(getNotice)
-	.put(validate(noticeValidationSchema), updateNotice) // Apply validation middleware for PUT
-	.delete(deleteNotice);
-
+	.get(checkObjectId, getNotice) 
+	.put(
+		checkObjectId, 
+		updateNotice
+	)
+	.delete(checkObjectId, deleteNotice);
 export default router;

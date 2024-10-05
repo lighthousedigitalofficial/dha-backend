@@ -1,6 +1,7 @@
 import express from "express";
-import { validate } from "../middleware/validationMiddleware.js";
-import { bannerValidationSchema } from "../validations/bannerValidation.js";
+import { validateSchema } from "../middleware/validationMiddleware.js";
+import {bannerValidationSchema} from '../validations/bannerValidator.js';
+import checkObjectId from "../middleware/checkObjectId.js";
 import {
 	createBanner,
 	getBanners,
@@ -13,13 +14,16 @@ const router = express.Router();
 
 router
 	.route("/")
-	.get(getBanners)
-	.post(validate(bannerValidationSchema), createBanner);
+	.get(getBanners) 
+	.post(validateSchema(bannerValidationSchema), createBanner); 
 
 router
 	.route("/:id")
-	.get(getBanner)
-	.put(validate(bannerValidationSchema), updateBanner)
-	.delete(deleteBanner);
+	.get(checkObjectId, getBanner)
+	.put(
+		checkObjectId, 
+		updateBanner
+	)
+	.delete(checkObjectId, deleteBanner); 
 
 export default router;
