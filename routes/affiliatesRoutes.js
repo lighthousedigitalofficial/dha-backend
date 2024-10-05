@@ -6,12 +6,16 @@ import {
   deleteAffiliates,
   getAffiliates,
   getAllAffiliates,
+  getBySlug,
   updateAffiliates,
 } from "../controllers/affiliatesController.js";
 
 const router = express.Router();
 
 router.route("/").post(createAffiliates).get(getAllAffiliates);
+
+router.route("/slug/:slug").get(getBySlug);
+
 
 router
   .route("/:id", checkObjectId)

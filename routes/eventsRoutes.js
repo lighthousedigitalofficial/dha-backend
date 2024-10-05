@@ -5,6 +5,7 @@ import {
   createEvents,
   deleteEvents,
   getAllEvents,
+  getBySlug,
   getEvents,
   updateEvents,
 } from "../controllers/eventsController.js";
@@ -12,6 +13,7 @@ import {
 const router = express.Router();
 
 router.route("/").post(createEvents).get(getAllEvents);
+router.route("/slug/:slug").get(getBySlug);
 
 router
   .route("/:id", checkObjectId)

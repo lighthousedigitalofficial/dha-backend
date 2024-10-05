@@ -40,10 +40,10 @@ const engineersSchema = new mongoose.Schema(
   }
 );
 
-engineersSchema.pre('find', function (next) {
+engineersSchema.pre("find", function (next) {
   this.populate({
-    path: 'affiliateId', 
-    select: 'name',
+    path: "affiliateId",
+    select: "name",
   });
   next();
 });

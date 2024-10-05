@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { checkReferenceId } from "../utils/helpers.js";
 
 // Utility function to check if a reference ID exists
 export const checkReferenceId = async (modelName, id) => {
@@ -47,7 +48,12 @@ propertyDealerSchema.pre('find', function (next) {
   next();
 });
 
-// Create the model
+// Pre 'save' middleware to check if affiliateId exists before saving
+propertyDealerSchema.pre("save", async function (next) {
+  await checkReferenceId("Affiliates", this.affiliateId, next);
+  next();
+});
+
 const PropertyDealer = mongoose.model("PropertyDealer", propertyDealerSchema);
 
 export default PropertyDealer;

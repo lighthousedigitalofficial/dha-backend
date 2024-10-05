@@ -5,6 +5,7 @@ import {
   createEngineers,
   deleteEngineers,
   getAllEngineers,
+  getBySlug,
   getEngineers,
   updateEngineers,
 } from "../controllers/engineersController.js";
@@ -12,6 +13,7 @@ import {
 const router = express.Router();
 
 router.route("/").post(createEngineers).get(getAllEngineers);
+router.route("/slug/:slug").get(getBySlug);
 
 router
   .route("/:id", checkObjectId)
