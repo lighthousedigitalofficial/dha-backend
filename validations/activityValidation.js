@@ -24,9 +24,7 @@ export const activityValidation = Joi.object({
   bannerId: Joi.string().optional().messages({
     "string.base": "Banner ID must be a valid string."
   }),
-  slug: Joi.string().optional().messages({
-    "string.base": "Slug must be a valid string."
-  }),
+ 
   status: Joi.string().valid("active", "inactive").optional().messages({
     "string.base": "Status must be a valid string.",
     "any.only": "Status must be either 'active' or 'inactive'."
