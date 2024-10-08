@@ -2,10 +2,9 @@ import mongoose from "mongoose";
 
 const bannerSchema = new mongoose.Schema(
 	{
-	
-	type: {
+		type: {
 			type: String,
-			enum: ["image", "video"], 
+			enum: ["image", "video"],
 			required: [true, "Please specify the banner type."],
 		},
 		mediaUrl: {
@@ -27,7 +26,7 @@ const bannerSchema = new mongoose.Schema(
 		},
 	},
 	{
-		timestamps: true, 
+		timestamps: true,
 	}
 );
 

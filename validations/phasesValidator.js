@@ -4,7 +4,6 @@ export const phasesValidation = Joi.object({
 	title: Joi.string().required().messages({
 		"any.required": "Please provide a title.",
 	}),
-	slug: Joi.string().optional(),
 	description: Joi.string().required().messages({
 		"any.required": "Please provide a description.",
 	}),
