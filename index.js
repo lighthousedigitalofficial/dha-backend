@@ -26,8 +26,7 @@ import config from "./config/index.js";
 // };
 
 const corsOptions = {
-	origin: true, // Allows all origins, CORS will reflect the requesting origin
-	credentials: true, // This allows sending credentials like cookies along with requests
+	origin: "*", // Allows all origins, CORS will reflect the requesting origin
 };
 
 connectDB();
