@@ -17,15 +17,8 @@ router.post("/logout", protect, logout);
 
 // router.put("/update-password", protect, selectModelByRole, updatePassword);
 
-router
-	.route("/")
-	.post(protect, restrictTo("admin"), createUser)
-	.get(protect, getUsers);
+router.route("/").post(createUser).get(getUsers);
 
-router
-	.route("/:id")
-	.get(protect, getUser)
-	.delete(protect, restrictTo("admin"), deleteUser)
-	.put(protect, updateUser);
+router.route("/:id").get(getUser).delete(deleteUser).put(updateUser);
 
 export default router;
