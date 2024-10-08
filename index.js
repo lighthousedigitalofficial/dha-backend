@@ -11,23 +11,28 @@ import AppError from "./utils/appError.js";
 
 import router from "./routes/index.js";
 import config from "./config/index.js";
-import allowedOrigins from "./config/origins.js";
+// import allowedOrigins from "./config/origins.js";
+
+// const corsOptions = {
+// 	origin: function (origin, callback) {
+// 		if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+// 			callback(null, true);
+// 		} else {
+// 			callback(new Error("Not allowed by CORS"));
+// 		}
+// 	},
+// 	// Some legacy browsers choke on 204
+// 	optionsSuccessStatus: 200,
+// };
+
+const corsOptions = {
+	origin: true, // Allows all origins, CORS will reflect the requesting origin
+	credentials: true, // This allows sending credentials like cookies along with requests
+};
 
 connectDB();
 
 const app = express();
-
-const corsOptions = {
-	origin: function (origin, callback) {
-		if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-			callback(null, true);
-		} else {
-			callback(new Error("Not allowed by CORS"));
-		}
-	},
-	// Some legacy browsers choke on 204
-	optionsSuccessStatus: 200,
-};
 
 // Security headers first
 app.use(helmet());
