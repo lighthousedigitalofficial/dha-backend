@@ -1,35 +1,59 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-
-dotenv.config({ path: "./.env" });
+import helmet from "helmet";
+import ExpressMongoSanitize from "express-mongo-sanitize";
 
 import connectDB from "./config/db.js";
 import globalErrorHandler from "./controllers/errorController.js";
 import AppError from "./utils/appError.js";
 
 import router from "./routes/index.js";
-
-const port = process.env.PORT || 8000;
+import config from "./config/index.js";
+import allowedOrigins from "./config/origins.js";
 
 connectDB();
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+	origin: function (origin, callback) {
+		if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+			callback(null, true);
+		} else {
+			callback(new Error("Not allowed by CORS"));
+		}
+	},
+	// Some legacy browsers choke on 204
+	optionsSuccessStatus: 200,
+};
+
+// Security headers first
+app.use(helmet());
+// CORS setup before request handling
+app.use(cors(corsOptions));
+// Parse JSON request body early
 app.use(express.json());
+// Parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
+// Parse cookies before using them (e.g., for auth)
 app.use(cookieParser());
+// Sanitize the request after body and cookies are parsed
+app.use(ExpressMongoSanitize());
 
 // Developing logging
-if (process.env.NODE_ENV === "development") {
+if (config.nodeENV === "development") {
 	app.use(morgan("dev"));
 }
 
 app.get("/", (req, res) => {
-	res.status(200).send("DHA api is running...");
+	res.status(200).json({
+		status: "success",
+		message: "DHA API is running successfully",
+		timestamp: new Date().toISOString(),
+		version: "1.0.0",
+	});
 });
 
 // Route end point
@@ -43,6 +67,11 @@ app.all("*", (req, res, next) => {
 // GLOBAL ERROR HANDLING MIDDLEWARE
 app.use(globalErrorHandler);
 
-app.listen(port, () =>
-	console.log(`🛜  Server running on http://localhost:${port}`)
-);
+app.listen(config.port, () => {
+	console.log(`
+  🚀 Server is up and running!
+  🌐 URL: http://localhost:${config.port}
+  🛠️  Environment: ${config.nodeENV || "development"}
+  📅  Started at: ${new Date().toLocaleString()}
+  `);
+});
