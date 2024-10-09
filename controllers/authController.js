@@ -45,7 +45,8 @@ const createSendToken = async (user, statusCode, res) => {
 		), // Convert days to milliseconds
 		httpOnly: true, // Prevent JS access to cookie
 		secure: config.nodeENV === "production", // HTTPS only in production
-		sameSite: "strict", // CSRF protection
+		// sameSite: "strict", // CSRF protection
+		sameSite: "None", //  Needed for cross-origin requests
 	};
 
 	// Clear password from user object
