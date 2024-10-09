@@ -28,8 +28,8 @@ import config from "./config/index.js";
 const corsOptions = {
 	// Allows all origins, CORS will reflect the requesting origin
 	origin: "*",
-	methods: "GET,POST,PUT,DELETE",
 	credentials: true,
+	optionSuccessStatus: 200,
 };
 
 connectDB();
@@ -57,7 +57,7 @@ if (config.nodeENV === "development") {
 app.get("/", (req, res) => {
 	res.status(200).json({
 		status: "success",
-		message: "DHA API is running successfully",
+		message: "DHA API is running successfully...",
 		timestamp: new Date().toISOString(),
 		version: "1.0.0",
 	});
