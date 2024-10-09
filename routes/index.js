@@ -18,7 +18,8 @@ import purchasePropertyRoutes from "./purchasePropertyRoutes.js";
 import registrationPropertyRoutes from "./registrationPropertyRoutes.js";
 import teamRoutes from "./teamRoutes.js";
 import portalGuideRoutes from "./portalGuideRoutes.js";
-import mediaRoutes from "./mediaRoutes.js";
+
+import mediaRoutes from "./mediaRoutes.js"
 import propertyDealerRoutes from "./propertyDealerRoutes.js";
 import totalRoutes from "./totalRoutes.js";
 

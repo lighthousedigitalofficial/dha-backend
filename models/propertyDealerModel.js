@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
 import { checkReferenceId } from "../utils/helpers.js";
 
+// Utility function to check if a reference ID exists
+export const checkReferenceId = async (modelName, id) => {
+  const Model = mongoose.model(modelName);
+  const exists = await Model.exists({ _id: id });
+  return exists;
+};
+
 const propertyDealerSchema = new mongoose.Schema(
   {
     agency: {
@@ -33,10 +40,10 @@ const propertyDealerSchema = new mongoose.Schema(
 );
 
 // Pre 'find' middleware to auto-populate the affiliateId field
-propertyDealerSchema.pre("find", function (next) {
+propertyDealerSchema.pre('find', function (next) {
   this.populate({
-    path: "affiliateId", // Corrected from 'affiliatesId' to 'affiliateId'
-    select: "name",
+    path: 'affiliateId',
+    select: 'name',
   });
   next();
 });

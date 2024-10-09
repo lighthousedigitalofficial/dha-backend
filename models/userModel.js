@@ -1,41 +1,61 @@
 import mongoose from "mongoose";
-import validator from "validator";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
 	{
 		firstName: {
 			type: String,
-			required: [true, "Please tell us your name."],
+			required: [true, "First name is required"],
+			trim: true,
+			minlength: [2, "First name must be at least 2 characters long"],
 		},
 		lastName: {
 			type: String,
-			required: [true, "Please tell us your name."],
+			required: [true, "Last name is required"],
+			trim: true,
+			minlength: [2, "Last name must be at least 2 characters long"],
 		},
 		email: {
 			type: String,
-			required: [true, "Please provide your email address."],
+			required: [true, "Email is required"],
 			unique: true,
 			lowercase: true,
-			validate: [validator.isEmail, "Please provide a valid email address."],
+			validate: {
+				validator: function (v) {
+					return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+				},
+				message: "Please provide a valid email address",
+			},
+		},
+		identityType: {
+			type: String,
+			enum: ["CNIC", "NICOP", "POC"],
+			required: [true, "Identity type is required"],
+		},
+		identityNum: {
+			type: String,
+			required: [true, "Identity number is required"],
+			unique: true,
+		},
+		membershipNum: {
+			type: String,
+			unique: true,
+			sparse: true, // Allows null/undefined values to be ignored in uniqueness checks
+		},
+		phone: {
+			type: String,
+			required: [true, "Phone number is required"],
+		},
+		password: {
+			type: String,
+			required: [true, "Password is required"],
+			minlength: [8, "Password must be at least 8 characters long"],
+			select: false, // Prevents password from being returned in queries
 		},
 		role: {
 			type: String,
 			enum: ["admin", "user"],
 			default: "user",
-		},
-		address: String,
-		phone: String,
-		password: {
-			type: String,
-			required: [true, "Please provide a password."],
-			minlength: 6,
-			select: false,
-		},
-		active: {
-			type: Boolean,
-			default: true,
 		},
 	},
 	{
@@ -43,58 +63,20 @@ const userSchema = new mongoose.Schema(
 	}
 );
 
+// Pre-save middleware to hash password before saving the user
+userSchema.pre("save", async function (next) {
+	if (!this.isModified("password")) return next(); // Only hash if password is new/changed
+	this.password = await bcrypt.hash(this.password, 12); // 12 is the salt rounds
+	next();
+});
+
+// Instance method to compare entered password with hashed password in DB
 userSchema.methods.correctPassword = async function (
 	candidatePassword,
 	userPassword
 ) {
 	return await bcrypt.compare(candidatePassword, userPassword);
 };
-
-userSchema.methods.changePasswordAfter = function (JWTTimestamp) {
-	if (this.passwordChangedAt) {
-		const changeTimestamp = parseInt(
-			this.passwordChangedAt.getTime() / 1000,
-			10
-		);
-
-		return JWTTimestamp < changeTimestamp;
-	}
-	// NO password changed
-	return false;
-};
-
-userSchema.methods.createPasswordResetToken = function () {
-	const resetToken = crypto.randomBytes(32).toString("hex");
-
-	this.passwordResetToken = crypto
-		.createHash("sha256")
-		.update(resetToken)
-		.digest("hex");
-
-	this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-
-	return resetToken;
-};
-
-userSchema.pre("save", async function (next) {
-	// Only work when the password is not modified
-	if (!this.isModified("password")) return next();
-
-	// Hash the password using cost of 12
-	this.password = await bcrypt.hash(this.password, 12);
-
-	next();
-});
-
-userSchema.pre("save", function (next) {
-	if (!this.isModified("password") || this.isNew) return next();
-
-	// 1 sec minus: beaucese the unexcepted bug during issued jwt token
-	// the token created after the password changed
-	this.passwordChangedAt = Date.now() - 1000;
-
-	next();
-});
 
 const User = mongoose.model("User", userSchema);
 

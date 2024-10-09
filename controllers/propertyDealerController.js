@@ -4,7 +4,7 @@ import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import { checkReferenceId } from "../utils/helpers.js";
 import slugify from "slugify";
-import Affiliates from "../models/affiliatesModel.js";
+import Affiliates from "../models/affiliatesModel.js"
 
 export const getAllPropertyDealers = factory.getAll(PropertyDealer);
 export const getPropertyDealer = factory.getOne(PropertyDealer);
