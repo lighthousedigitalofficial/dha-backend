@@ -3,7 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 // import helmet from "helmet";
-import ExpressMongoSanitize from "express-mongo-sanitize";
+// import ExpressMongoSanitize from "express-mongo-sanitize";
 
 import connectDB from "./config/db.js";
 import globalErrorHandler from "./controllers/errorController.js";
@@ -47,7 +47,7 @@ app.use(express.urlencoded({ extended: true }));
 // Parse cookies before using them (e.g., for auth)
 app.use(cookieParser());
 // Sanitize the request after body and cookies are parsed
-app.use(ExpressMongoSanitize());
+// app.use(ExpressMongoSanitize());
 
 // Developing logging
 if (config.nodeENV === "development") {
@@ -57,7 +57,7 @@ if (config.nodeENV === "development") {
 app.get("/", (req, res) => {
 	res.status(200).json({
 		status: "success",
-		message: "DHA API is running successfully...",
+		message: "DHA API is running successfully",
 		timestamp: new Date().toISOString(),
 		version: "1.0.0",
 	});

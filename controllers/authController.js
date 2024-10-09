@@ -44,9 +44,8 @@ const createSendToken = async (user, statusCode, res) => {
 			Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000
 		), // Convert days to milliseconds
 		httpOnly: true, // Prevent JS access to cookie
-		secure: config.nodeENV === "production", // HTTPS only in production
+		// secure: config.nodeENV === "production", // HTTPS only in production
 		// sameSite: "strict", // CSRF protection
-		sameSite: "None", //  Needed for cross-origin requests
 	};
 
 	// Clear password from user object
