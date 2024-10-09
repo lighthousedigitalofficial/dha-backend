@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import helmet from "helmet";
+// import helmet from "helmet";
 import ExpressMongoSanitize from "express-mongo-sanitize";
 
 import connectDB from "./config/db.js";
@@ -34,7 +34,7 @@ connectDB();
 const app = express();
 
 // Security headers first
-app.use(helmet());
+// app.use(helmet());
 // CORS setup before request handling
 app.use(cors(corsOptions));
 // Parse JSON request body early
