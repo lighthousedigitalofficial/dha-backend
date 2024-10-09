@@ -20,6 +20,7 @@ import teamRoutes from "./teamRoutes.js";
 import portalGuideRoutes from "./portalGuideRoutes.js";
 import mediaRoutes from "./mediaRoutes.js";
 import propertyDealerRoutes from "./propertyDealerRoutes.js";
+import totalRoutes from "./totalRoutes.js";
 
 router.use("/users", userRoutes);
 
@@ -30,6 +31,7 @@ router.use("/events", eventsRoutes);
 router.use("/engineers", engineersRoutes);
 router.use("/affiliates", affiliatesRoutes);
 router.use("/property-dealer", propertyDealerRoutes);
+router.use("/totals", totalRoutes);
 
 // Waseem
 router.use("/activities", activityRoutes);
