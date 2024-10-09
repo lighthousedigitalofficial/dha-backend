@@ -1,5 +1,5 @@
 import User from "../models/userModel.js";
-import config from "../config/index.js";
+// import config from "../config/index.js";
 
 import { checkFields } from "./handleFactory.js";
 import catchAsync from "../utils/catchAsync.js";
@@ -29,31 +29,31 @@ export const login = catchAsync(async (req, res, next) => {
 // CreateSendToken function (for both access and refresh tokens)
 const createSendToken = async (user, statusCode, res) => {
 	const accessToken = await loginService(user); // Create access token
-	const refreshToken = createRefreshToken(user); // Generate refresh token
+	// const refreshToken = createRefreshToken(user); // Generate refresh token
 
 	// Validate and format cookie expiration date
-	let refreshTokenExpiresInDays = config.refreshTokenExpiresIn;
-	if (isNaN(refreshTokenExpiresInDays) || refreshTokenExpiresInDays <= 0) {
-		// Default to 30 days if not properly configured // Default to 30 days if not properly configured
-		refreshTokenExpiresInDays = 30;
-	}
+	// let refreshTokenExpiresInDays = config.refreshTokenExpiresIn;
+	// if (isNaN(refreshTokenExpiresInDays) || refreshTokenExpiresInDays <= 0) {
+	// 	// Default to 30 days if not properly configured // Default to 30 days if not properly configured
+	// 	refreshTokenExpiresInDays = 30;
+	// }
 
 	// Set cookie options for refresh token (secure & httpOnly)
-	const cookieOptions = {
-		expires: new Date(
-			Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000
-		), // Convert days to milliseconds
-		httpOnly: true, // Prevent JS access to cookie
-		secure: config.nodeENV === "production", // HTTPS only in production
-		// sameSite: "strict", // CSRF protection
-		sameSite: "None", //  Needed for cross-origin requests
-	};
+	// const cookieOptions = {
+	// 	expires: new Date(
+	// 		Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000
+	// 	), // Convert days to milliseconds
+	// 	httpOnly: true, // Prevent JS access to cookie
+	// 	secure: config.nodeENV === "production", // HTTPS only in production
+	// 	// sameSite: "strict", // CSRF protection
+	// 	sameSite: "None", //  Needed for cross-origin requests
+	// };
 
 	// Clear password from user object
 	user.password = undefined;
 
 	// Store refresh token in an HTTP-only cookie
-	res.cookie("jwtRefreshToken", refreshToken, cookieOptions);
+	// res.cookie("jwtRefreshToken", refreshToken, cookieOptions);
 
 	// Send response with access token
 	res.status(statusCode).json({
