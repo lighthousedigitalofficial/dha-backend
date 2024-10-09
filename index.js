@@ -57,7 +57,7 @@ if (config.nodeENV === "development") {
 app.get("/", (req, res) => {
 	res.status(200).json({
 		status: "success",
-		message: "DHA API is running successfully",
+		message: "DHA API is running successfully...",
 		timestamp: new Date().toISOString(),
 		version: "1.0.0",
 	});
