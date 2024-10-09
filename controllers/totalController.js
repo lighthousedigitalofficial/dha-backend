@@ -15,7 +15,7 @@ export const getTotals = catchAsync(async (req, res, next) => {
   const totalPhases = await Phases.countDocuments();
   const totalSalesProperty = await SaleProperty.countDocuments();
   const totalPurchaseProperty = await PurchaseProperty.countDocuments();
-  const totalNotic = await Notice.countDocuments();
+  const totalNotice = await Notice.countDocuments();
   const totalPropertyDealers = await PropertyDealer.countDocuments();
   const totalUsers = await User.countDocuments();
   const totalEngineers = await Engineers.countDocuments();
@@ -28,7 +28,7 @@ export const getTotals = catchAsync(async (req, res, next) => {
       totalPhases,
       totalSalesProperty,
       totalPurchaseProperty,
-      totalNotic,
+      totalNotice,
       totalPropertyDealers,
       totalUsers,
       totalEngineers,
