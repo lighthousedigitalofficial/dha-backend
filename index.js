@@ -26,7 +26,10 @@ import config from "./config/index.js";
 // };
 
 const corsOptions = {
-	origin: "*", // Allows all origins, CORS will reflect the requesting origin
+	// Allows all origins, CORS will reflect the requesting origin
+	origin: "*",
+	methods: "GET,POST,PUT,DELETE",
+	credentials: true,
 };
 
 connectDB();
