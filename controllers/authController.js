@@ -1,5 +1,5 @@
 import User from "../models/userModel.js";
-// import config from "../config/index.js";
+import config from "../config/index.js";
 
 import { checkFields } from "./handleFactory.js";
 import catchAsync from "../utils/catchAsync.js";
@@ -53,7 +53,7 @@ const createSendToken = async (user, statusCode, res) => {
 	user.password = undefined;
 
 	// Store refresh token in an HTTP-only cookie
-	// res.cookie("jwtRefreshToken", refreshToken, cookieOptions);
+	res.cookie("jwtRefreshToken", refreshToken, cookieOptions);
 
 	// Send response with access token
 	res.status(statusCode).json({
