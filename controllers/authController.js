@@ -1,11 +1,47 @@
 import User from "../models/userModel.js";
-// import config from "../config/index.js";
 
 import { checkFields } from "./handleFactory.js";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "./../utils/appError.js";
 
 import { loginService, createRefreshToken } from "../services/authService.js";
+
+// CreateSendToken function (for both access and refresh tokens)
+const createSendToken = async (user, statusCode, res) => {
+	const accessToken = await loginService(user); // Create access token
+	const refreshToken = createRefreshToken(user); // Generate refresh token
+
+	// Validate and format cookie expiration date
+	let refreshTokenExpiresInDays = process.env.JWT_REFRESH_TIME;
+	if (isNaN(refreshTokenExpiresInDays) || refreshTokenExpiresInDays <= 0) {
+		// Default to 30 days if not properly configured
+		refreshTokenExpiresInDays = 30;
+	}
+
+	// Set cookie options for refresh token (secure & httpOnly)
+	const cookieOptions = {
+		expires: new Date(
+			Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000
+		), // Convert days to milliseconds
+		httpOnly: true, // Prevent JS access to cookie
+		secure: process.env.NODE_ENV === "production", // HTTPS only in production
+		// sameSite: "strict", // CSRF protection
+		sameSite: "None",
+	};
+
+	// Clear password from user object
+	user.password = undefined;
+
+	// Store refresh token in an HTTP-only cookie
+	res.cookie("jwtRefreshToken", refreshToken, cookieOptions);
+
+	// Send response with access token
+	res.status(statusCode).json({
+		status: "success",
+		token: accessToken,
+		doc: user,
+	});
+};
 
 export const login = catchAsync(async (req, res, next) => {
 	const { email, password } = req.body;
@@ -25,43 +61,6 @@ export const login = catchAsync(async (req, res, next) => {
 	// 3) Generate and send tokens if everything is OK
 	createSendToken(user, 200, res);
 });
-
-// CreateSendToken function (for both access and refresh tokens)
-const createSendToken = async (user, statusCode, res) => {
-	const accessToken = await loginService(user); // Create access token
-	const refreshToken = createRefreshToken(user); // Generate refresh token
-
-	// Validate and format cookie expiration date
-	let refreshTokenExpiresInDays = config.refreshTokenExpiresIn;
-	if (isNaN(refreshTokenExpiresInDays) || refreshTokenExpiresInDays <= 0) {
-		// Default to 30 days if not properly configured // Default to 30 days if not properly configured
-		refreshTokenExpiresInDays = 30;
-	}
-
-	// Set cookie options for refresh token (secure & httpOnly)
-	const cookieOptions = {
-		expires: new Date(
-			Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000
-		), // Convert days to milliseconds
-		httpOnly: true, // Prevent JS access to cookie
-		secure: config.nodeENV === "production", // HTTPS only in production
-		// sameSite: "strict", // CSRF protection
-		sameSite: "None", //  Needed for cross-origin requests
-	};
-
-	// Clear password from user object
-	user.password = undefined;
-
-	// Store refresh token in an HTTP-only cookie
-	// res.cookie("jwtRefreshToken", refreshToken, cookieOptions);
-
-	// Send response with access token
-	res.status(statusCode).json({
-		status: "success",
-		token: accessToken,
-		doc: user,
-	});
-};
 
 export const signup = catchAsync(async (req, res, next) => {
 	// Use checkFields to filter out any invalid fields
@@ -93,7 +92,7 @@ export const signup = catchAsync(async (req, res, next) => {
 export const logout = catchAsync(async (req, res, next) => {
 	const user = req.user;
 
-	// await removeRefreshToken(user._id.toString());
+	await removeRefreshToken(user._id.toString());
 
 	// Clear the refreshToken cookie on the client
 	res.clearCookie("jwt");

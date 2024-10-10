@@ -1,5 +1,12 @@
 import jwt from "jsonwebtoken";
-import config from "../config/index.js";
+
+const config = {
+	jwtSecret: process.env.JWT_SECRET,
+	refreshSecret: process.env.JWT_REFRESH_SECRET,
+	jwtAccessTime: process.env.JWT_ACCESS_TIME,
+	accessTokenExpiresIn: process.env.JWT_ACCESS_TIME,
+	refreshTokenExpiresIn: process.env.JWT_REFRESH_TIME,
+};
 
 // Generate access token service
 export const loginService = async (user) => {
@@ -17,7 +24,7 @@ export const createRefreshToken = (user) => {
 
 export const verifyRefreshToken = (token) => {
 	try {
-		return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+		return jwt.verify(token, config.refreshSecret);
 	} catch (err) {
 		return null;
 	}

@@ -17,7 +17,7 @@ export const checkFields = (Model, req, next) => {
 	);
 
 	// Step 3: If extra fields are found, send an error response
-	if (extraFields.length > 0) {
+	if (extraFields.length > 0 && extraFields[0] !== "id") {
 		next(
 			new AppError(
 				`These fields are not allowed: ${extraFields.join(", ")}`,
