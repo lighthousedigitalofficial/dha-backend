@@ -21,12 +21,9 @@ router
 	);
 
 router
-	.route("/:id")
-	.get(checkObjectId, getAssociatesWebsite) 
-	.put(
-		checkObjectId,
-		updateAssociatesWebsite
-	)
-	.delete(checkObjectId, deleteAssociatesWebsite); 
+	.route("/:id", checkObjectId)
+	.get(getAssociatesWebsite)
+	.put(updateAssociatesWebsite)
+	.delete(deleteAssociatesWebsite);
 
 export default router;
