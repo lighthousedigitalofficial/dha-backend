@@ -92,10 +92,14 @@ export const signup = catchAsync(async (req, res, next) => {
 export const logout = catchAsync(async (req, res, next) => {
 	const user = req.user;
 
-	await removeRefreshToken(user._id.toString());
+	// await removeRefreshToken(user._id.toString());
 
 	// Clear the refreshToken cookie on the client
-	res.clearCookie("jwt");
+	res.clearCookie("jwt", {
+		httpOnly: true, // Ensures the cookie is not accessible via JavaScript (security)
+		secure: process.env.NODE_ENV === "production",
+		sameSite: "None", // Protects against CSRF attacks
+	});
 
 	res.status(200).json({
 		status: "success",
