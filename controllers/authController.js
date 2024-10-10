@@ -86,12 +86,7 @@ export const signup = catchAsync(async (req, res, next) => {
 		phone,
 	});
 
-	res.status(statusCode).json({
-		status: "success",
-		doc: newUser,
-	});
-
-	// createSendToken(newUser, 201, res);
+	createSendToken(newUser, 201, res);
 });
 
 export const logout = catchAsync(async (req, res, next) => {

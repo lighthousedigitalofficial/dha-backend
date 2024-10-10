@@ -10,8 +10,9 @@ import globalErrorHandler from "./controllers/errorController.js";
 import AppError from "./utils/appError.js";
 
 import router from "./routes/index.js";
-import config from "./config/index.js";
 // import allowedOrigins from "./config/origins.js";
+
+const port = process.env.PORT || 5000;
 
 // const corsOptions = {
 // 	origin: function (origin, callback) {
@@ -50,7 +51,7 @@ app.use(cookieParser());
 // app.use(ExpressMongoSanitize());
 
 // Developing logging
-if (config.nodeENV === "development") {
+if (process.env.NODE_ENV === "development") {
 	app.use(morgan("dev"));
 }
 
@@ -74,11 +75,11 @@ app.all("*", (req, res, next) => {
 // GLOBAL ERROR HANDLING MIDDLEWARE
 app.use(globalErrorHandler);
 
-app.listen(config.port, () => {
+app.listen(port, () => {
 	console.log(`
   🚀 Server is up and running!
-  🌐 URL: http://localhost:${config.port}
-  🛠️  Environment: ${config.nodeENV || "development"}
+  🌐 URL: http://localhost:${port}
+  🛠️  Environment: ${process.env.NODE_ENV || "development"}
   📅  Started at: ${new Date().toLocaleString()}
   `);
 });
